@@ -1,0 +1,29 @@
+#game {
+    position: absolute;
+    left: 100px;
+}
+
+#board {
+    margin-top: 60px;
+    /*display: grid;*/
+    /*grid-template-columns: 120px 120px 120px;*/
+    /*grid-template-rows: 120px 120px 120px;*/
+    position: static;
+}
+
+
+.pos {
+    border:2px solid;
+    text-align: center;
+    background-color: lightblue;
+    width: 100px;
+    height: 100px;
+    margin-top: 0;
+    font-size: 15px;
+}
+
+.pos:hover {
+    font-size: 40px;
+    background-color: #ffffff;
+    border: 2px solid #0d80f2;
+}

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="styles.css">
+<head>
+    <meta charset="UTF-8">
+    <title>BattleShip</title>
+</head>
+<body>
+<div id="controls">
+    <h1 id="currGame">Number of hits left: 20</h1>
+    <button id="newGame" onclick="resetGame()">New Game</button>
+</div>
+<div id="game">
+    <div id="board">
+        <script>
+
+            var ships =
+                    [
+                        {
+                            name: 'ship1',
+                            orientation: 'horizontal',
+                            size: 4,
+                            coords:[[1,1], [2,1], [3,1], [4,1]]
+                        },
+                        {
+                            name:'ship2',
+                            orientation: 'horizontal',
+                            size: 3,
+                            coords:[[3,3], [4,3], [5,3]]
+                        },
+                        {
+                            name:'ship3',
+                            orientation: 'vertical',
+                            size: 3,
+                            coords:[[0,3], [0,4], [0,5]]
+                        },
+                        {
+                            name:'ship4',
+                            orientation: 'horizontal',
+                            size: 2,
+                            coords:[[4,5], [5,5]]
+                        }
+                    ]
+
+            var currGameGuesses = 20;
+
+            // create board
+            createBoard();
+
+            function createBoard() {
+                for (let r = 0; r < 6; r++) {
+                    let row = document.createElement("div");
+                    row.id = "row_" + r
+
+                    for (let c = 0; c < 6; c++) {
+                        let square = document.createElement("button");
+                        square.id = r + "_" + c
+                        square.className = "pos"
+                        square.onclick = squareClicked;
+                        row.append(square)
+                    }
+                    document.getElementById("board").appendChild(row);
+                }
+            }
+
+            function revealShips() {
+                for (let x in ships) {
+                    let shipCoords = ships[x].coords
+                    for (let coord in shipCoords) {
+                        let r = shipCoords[coord][0];
+                        let c = shipCoords[coord][1];
+
+                        let ship = document.getElementById(r + "_" + c)
+                        if (ship.style.backgroundColor !== "red") {
+                            ship.style.backgroundColor = "orange";
+                        }
+                    }
+                }
+            }
+
+            function checkIfShipExists(r, c) {
+                for (let i in ships) {
+                    let ship = ships[i]
+                    for (let j in ship.coords) {
+                        let row = ship.coords[j][0];
+                        let col = ship.coords[j][1];
+
+                        // hit
+                        if (row === r && col === c) {
+                            ship.size--;
+                            if (ship.size === 0) {
+                                alert("Ship has sunk")
+                            }
+                            return true
+                        }
+                    }
+                }
+
+                return false
+            }
+
+            function checkIfAllShipsSunk() {
+                for (let i in ships) {
+                    let ship = ships[i]
+
+                    if (ship.size > 0) {
+                        return false
+                    }
+                }
+
+                return true
+            }
+
+            function squareClicked(event) {
+                let coords = event.target.id.split("_")
+                let r = Number(coords[0])
+                let c = Number(coords[1])
+
+                let square = document.getElementById(r + "_" + c)
+                if (checkIfShipExists(r, c)) {
+                    square.style.backgroundColor = "red";
+                } else {
+                    square.style.backgroundColor = "grey";
+                }
+                square.disabled = true;
+
+                if (checkIfAllShipsSunk()) {
+                    document.getElementById("currGame").innerText = "WIN! All ships sunk!"
+                    disableGame();
+                    return
+                }
+
+                currGameGuesses--;
+                if (currGameGuesses === 0) {
+                    revealShips()
+                    disableGame();
+                    document.getElementById("currGame").innerText = "Game Over!"
+                } else {
+                    document.getElementById("currGame").innerText = "Number of hits left: " + currGameGuesses
+                }
+            }
+
+            function disableGame() {
+                for (let r = 0; r < 6; r++) {
+                    for (let c = 0; c < 6; c++) {
+                        let square = document.getElementById(r + "_" + c);
+                        square.disabled = true;
+                    }
+                }
+            }
+
+            function resetGame() {
+                currGameGuesses = 20;
+                document.getElementById("currGame").innerText = "Number of hits left: " + currGameGuesses
+
+                // reset squares in DOM
+                for (let r = 0; r < 6; r++) {
+                    for (let c = 0; c < 6; c++) {
+                        let square = document.getElementById(r + "_" + c);
+                        square.className = "pos"
+                        square.style.backgroundColor = "lightblue"
+                        square.disabled = false;
+                    }
+                }
+
+                // reset ships sizes
+                for (let i in ships) {
+                    let ship = ships[i]
+                    ship.size = ship.coords.length
+                }
+            }
+
+
+        </script>
+    </div>
+</div>
+
+
+</body>
+</html>
