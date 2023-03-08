@@ -85,7 +85,7 @@
                         let row = ship.coords[j][0];
                         let col = ship.coords[j][1];
 
-                        // hit
+                        // ship coord is hit
                         if (row === r && col === c) {
                             ship.size--;
                             if (ship.size === 0) {
@@ -95,7 +95,6 @@
                         }
                     }
                 }
-
                 return false
             }
 
@@ -107,7 +106,6 @@
                         return false
                     }
                 }
-
                 return true
             }
 
@@ -124,6 +122,7 @@
                 }
                 square.disabled = true;
 
+                // check for win
                 if (checkIfAllShipsSunk()) {
                     document.getElementById("currGame").innerText = "WIN! All ships sunk!"
                     disableGame();
@@ -131,6 +130,8 @@
                 }
 
                 currGameGuesses--;
+
+                // check for game over
                 if (currGameGuesses === 0) {
                     revealShips()
                     disableGame();
@@ -149,6 +150,7 @@
                 }
             }
 
+            // start a new game
             function resetGame() {
                 currGameGuesses = 20;
                 document.getElementById("currGame").innerText = "Number of hits left: " + currGameGuesses
